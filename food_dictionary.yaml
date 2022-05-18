@@ -1,0 +1,43 @@
+fruits:
+  - apple
+  - banana
+  - grape
+  - peach
+  - blueberry
+  - strawberry
+  - pineapple crushed
+vegetables:
+  - cabbage
+  - potato
+  - carrot
+  - avocado
+grains:
+  - flour
+  - rice
+  - beans
+  - white bread
+  - rye bread
+  - pasta
+  - tofu
+meat:
+  - chicken
+  - pork
+  - beef
+  - lamb
+  - turkey
+fish:
+  - salmon
+  - herring
+  - tuna
+drinks:
+  - coffee
+  - tea
+fats:
+  - olive oil
+  - walnuts
+diary:
+  - milk
+  - egg
+  - yogurt
+  - cheese
+  - cream

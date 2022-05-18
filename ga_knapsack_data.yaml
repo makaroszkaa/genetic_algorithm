@@ -1,0 +1,28 @@
+pocketknife:
+  name: 'pocketknife'
+  pnts: 10
+  wt: 1
+beans:
+  name: 'beans'
+  pnts: 20
+  wt: 5
+potatoes:
+  name: 'potatoes'
+  pnts: 15
+  wt: 10
+onions:
+  name: 'onions'
+  pnts: 2
+  wt: 1
+bag:
+  name: 'bag'
+  pnts: 30
+  wt: 7
+rope:
+  name: 'rope'
+  pnts: 10
+  wt: 5
+compass:
+  name: 'compass'
+  pnts: 30
+  wt: 1
