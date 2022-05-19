@@ -22,3 +22,5 @@ not_present <- not_present[not_present == 0]
 # Define limitations
 wt_lim  <- 0.7 * 90 ## low protein diet is 0.6 - 0.8 grams per 1 kg of body mass
 a_energ <- 25  * 90 ## adequate energy for mid-level activity
+
+

@@ -1,24 +1,24 @@
 fruits:
-  - apple
-  - banana
-  - grape
-  - peach
-  - blueberry
-  - strawberry
-  - pineapple crushed
+  - apples
+  - bananas
+  - grapes
+  - peaches
+  - blueberries
+  - strawberries
+  - pineapple
 vegetables:
   - cabbage
   - potato
   - carrot
-  - avocado
+  - avocados
 grains:
-  - flour
+  - wheat flr
   - rice
   - beans
-  - white bread
-  - rye bread
+  - bread
   - pasta
   - tofu
+  - buckwheat groats
 meat:
   - chicken
   - pork
@@ -33,8 +33,10 @@ drinks:
   - coffee
   - tea
 fats:
-  - olive oil
+  - oil
   - walnuts
+  - butter
+  - coconut crm
 diary:
   - milk
   - egg
