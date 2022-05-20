@@ -11,6 +11,7 @@ vegetables:
   - potato
   - carrot
   - avocados
+  - squash
 grains:
   - wheat flr
   - rice
@@ -19,6 +20,8 @@ grains:
   - pasta
   - tofu
   - buckwheat groats
+  - cereals rte
+  - semolina
 meat:
   - chicken
   - pork
@@ -29,9 +32,6 @@ fish:
   - salmon
   - herring
   - tuna
-drinks:
-  - coffee
-  - tea
 fats:
   - oil
   - walnuts
