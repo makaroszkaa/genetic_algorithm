@@ -7,6 +7,7 @@ my_summary <- function(i){return(round(mean(i), 2))}
 
 # Read raw data
 foods    <- yaml::read_yaml('food_dictionary.yaml')
+nr_prods <- yaml::read_yaml('not_raw_products.yaml') ## not raw products
 raw_data <- fread("food.csv", stringsAsFactors = F)
 raw_data <- raw_data[, c(1, 2, 12, 18, 23, 29, 30, 31)]
 raw_data <- na.omit(raw_data)
@@ -35,7 +36,7 @@ fltr_data <- raw_data[cat %in% cats, ]
 fltr_data <- dplyr::arrange(fltr_data, cat, desc(enrg), pro)
 
 
-### ---               Compute mean nutrition facts for raw foods         --- ###
+# Compute nutrition facts for raw foods ----------------------------------------
 
 # Extract raw foods to exclude semi-products programmatically where possible
 raw_foods <- fltr_data[grep("raw", fltr_data$prod), ]
@@ -94,31 +95,39 @@ raw_foods <- raw_foods[, lapply(.SD, my_summary), by = cat]
 
 rm(tmp, tmp_cv, tmp_smr, trim_res, tmp_skewness, cv_cats)
 
-# TODO: find solution for categories which do not have raw attribute
 
-# Check which categories did not fall into raw foods
-idx     <- !(unique(fltr_data$cat) %in% unique(raw_foods$cat))
-not_raw <- unique(fltr_data$cat)[idx]
+# Compute nutrition facts for not raw foods ------------------------------------
 
-
-
-
-
-# Filter products that are raw to exclude the semi-finished products
-fltr_str <- paste0(
-  "raw|bread|carrot|pasta|buckwheat|walnuts|butter|milk",
-  "|semolina|cream"
-)
-fltr_raw <- fltr_data[grep(fltr_str, fltr_data$product), ]
-grp_data <- fltr_raw[
-  , .(mean_e = round(mean(unit_energy, trim = 0.01), 1), 
-      mean_p = round(mean(unit_protein, trim = 0.01), 1)), 
-  by = category
-]
+# Filter not raw products using product dictionary
+nr_prods <- unlist(nr_prods)
+not_raw  <- fltr_data[prod %in% nr_prods, !c("prod", "units"), with = F]
+not_raw  <- not_raw[, lapply(.SD, my_summary), by = cat]
 
 
+# Prepare menu -----------------------------------------------------------------
 
+# Round servings to make an easier judgement if the servings are correct
+menu_df      <- rbind(raw_foods, not_raw)
+menu_df$mass <- round(menu_df$mass, 0)
 
+# Limit all meat protein sources to 100 g serving per day
+meats <- c("beef", "chicken", "lamb", "pork", "salmon", "tuna", "turkey")
+menu_df$mass[menu_df$cat %in% meats] <- 100
+menu_df <- dplyr::arrange(menu_df, cat)
+
+# Change bread and butter serving since it is fixed by requirements
+menu_df$mass[menu_df$cat == 'bread']  <- 250
+menu_df$mass[menu_df$cat == 'butter'] <- 30
+
+# Compute per-serving nutrition data
+menu_df[, `:=` (pros = round(mass * pro / 100, 2),
+                cars = round(mass * carb / 100, 2),
+                fats = round(mass * fat / 100, 2),
+                cals = round(mass * enrg / 100, 2))]
+
+# Save menu as data.frame
+menu_df <- menu_df[, c(1, 7:10, 6)]
+saveRDS(menu_df, file = 'menu_file.rds')
 
 
 

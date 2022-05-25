@@ -6,12 +6,22 @@ fruits:
   - blueberries
   - strawberries
   - pineapple
+  - kiwi
+  - lemons
+  - mango
+  - raspberries
+  - honey
 vegetables:
   - cabbage
   - potato
   - carrot
   - avocados
   - squash
+  - tomatoes
+  - cucumber
+  - mushrooms
+  - broccoli
+  - cauliflower
 grains:
   - wheat flr
   - rice
@@ -22,6 +32,8 @@ grains:
   - buckwheat groats
   - cereals rte
   - semolina
+  - barley
+  - millet
 meat:
   - chicken
   - pork
