@@ -31,6 +31,10 @@ sample_sum <- function(df, max_sum, randn, verbose = T){
     tmp       <- rbind(tmp, pick_df)
     randn     <- randn + 1
     accumulated_sum <- accumulated_sum + pick_df$cals
+    
+    # Drop picked line from df to avoid double entries of the same food
+    df <- df[cat != pick_food, ]
+    
     if (verbose){
       print(paste0("Accumulated energy sum is ", accumulated_sum, " calories"))
     }

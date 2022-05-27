@@ -1,5 +1,6 @@
 fruits:
   - apples
+  - apricots
   - bananas
   - grapes
   - peaches
@@ -8,9 +9,15 @@ fruits:
   - pineapple
   - kiwi
   - lemons
-  - mango
+  - mangos
   - raspberries
   - honey
+  - blackberries
+  - cranberries
+  - grapefruit
+  - oranges
+  - watermelon
+  - pomegranates
 vegetables:
   - cabbage
   - potato
@@ -22,11 +29,14 @@ vegetables:
   - mushrooms
   - broccoli
   - cauliflower
+  - peppers
+  - eggplant
 grains:
   - wheat flr
   - rice
   - beans
   - bread
+  - croissants
   - pasta
   - tofu
   - buckwheat groats
@@ -34,12 +44,17 @@ grains:
   - semolina
   - barley
   - millet
+  - bulgur
+  - macaroni
+  - pancakes
 meat:
   - chicken
   - pork
   - beef
   - lamb
   - turkey
+  - goose
+  - duck
 fish:
   - salmon
   - herring
@@ -47,11 +62,14 @@ fish:
 fats:
   - oil
   - walnuts
+  - chestnuts
   - butter
   - coconut crm
+  - peanut butter
 diary:
   - milk
   - egg
   - yogurt
   - cheese
   - cream
+  - ice creams

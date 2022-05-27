@@ -9,9 +9,10 @@ my_summary <- function(i){return(round(mean(i), 2))}
 foods    <- yaml::read_yaml('food_dictionary.yaml')
 nr_prods <- yaml::read_yaml('not_raw_products.yaml') ## not raw products
 raw_data <- fread("food.csv", stringsAsFactors = F)
-raw_data <- raw_data[, c(1, 2, 12, 18, 23, 29, 30, 31)]
+raw_data <- raw_data[, c(1, 2, 12, 18, 23, 29, 38, 39, 30, 31)]
 raw_data <- na.omit(raw_data)
-col_name <- c("cat", "prod", "enrg", "pro", "carb", "fat", "mass", "units")
+col_name <- c("cat", "prod", "enrg", "pro", "carb", "fat", "phos", 
+              "pot", "mass", "units")
 colnames(raw_data) <- col_name
 raw_data <- as.data.table(apply(raw_data, 2, tolower))
 rm(col_name)
@@ -26,7 +27,7 @@ not_present <- lapply(X   = cats,
 not_present <- not_present[not_present == 0]
 
 # Convert numeric columns to allow future computations
-cols <- c("enrg", "pro", "carb", "fat", "mass")
+cols <- c("enrg", "pro", "carb", "fat", "phos", "pot", "mass")
 raw_data[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
 rm(cols)
 
@@ -111,7 +112,8 @@ menu_df      <- rbind(raw_foods, not_raw)
 menu_df$mass <- round(menu_df$mass, 0)
 
 # Limit all meat protein sources to 100 g serving per day
-meats <- c("beef", "chicken", "lamb", "pork", "salmon", "tuna", "turkey")
+meats <- c("beef", "chicken", "lamb", "pork", "salmon", "tuna", "turkey",
+           "goose", "duck")
 menu_df$mass[menu_df$cat %in% meats] <- 100
 menu_df <- dplyr::arrange(menu_df, cat)
 
@@ -120,13 +122,15 @@ menu_df$mass[menu_df$cat == 'bread']  <- 250
 menu_df$mass[menu_df$cat == 'butter'] <- 30
 
 # Compute per-serving nutrition data
-menu_df[, `:=` (pros = round(mass * pro / 100, 2),
-                cars = round(mass * carb / 100, 2),
-                fats = round(mass * fat / 100, 2),
-                cals = round(mass * enrg / 100, 2))]
+menu_df[, `:=` (pros   = round(mass * pro / 100, 2),
+                cars   = round(mass * carb / 100, 2),
+                fats   = round(mass * fat / 100, 2),
+                phosp  = round(mass * phos / 100, 2),
+                potas  = round(mass * pot / 100, 2),
+                cals   = round(mass * enrg / 100, 2))]
 
 # Save menu as data.frame
-menu_df <- menu_df[, c(1, 7:10, 6)]
+menu_df <- menu_df[, c(1, 9:14, 8)]
 saveRDS(menu_df, file = 'menu_file.rds')
 
 
