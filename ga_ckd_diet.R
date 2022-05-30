@@ -2,13 +2,13 @@ pkgs <- c("genalg", "ggplot2", "data.table")
 dpnd <- lapply(pkgs, library, character.only = T)
 source("ga_helpers.R")
 
-# Read menu data
-menu <- readRDS('menu_file.rds')
+# Read static dictionaries
+menu      <- readRDS('menu_file.rds')
+ckd_stage <- yaml::read_yaml("ckd_stage.yaml")
 
 # Dynamic inputs
 body_mass <- 90 ## body weight
 cur_stage <- 4  ## current ckd stage
-ckd_stage <- yaml::read_yaml("ckd_stage.yaml")
 ckd_stage <- rbindlist(ckd_stage)
 ckd_stage <- ckd_stage[stage == cur_stage, ]
 
@@ -19,7 +19,7 @@ pt_lim  <- ckd_stage$potas
 a_energ <- (25  * body_mass) * 1.1 ## adequate energy for mid-level activity
 
 # Subset foods from menu
-sub_menu <- sample_sum(menu, a_energ, 2, T)
+sub_menu <- sample_sum(menu, a_energ, 12, T)
 
 # Make dataset
 col_nms <- c("cat", "cals", "pros", "phosp", "potas")
@@ -52,4 +52,7 @@ cat(paste(paste0(" Total protein: ", sum(dataset[best_chromosome == 1, wt])),
           "\n"))
 
 # Extract quantities for daily menu
-menu[cat %in% dataset[best_chromosome == 1, name], ]
+qty_out <- menu[cat %in% dataset[best_chromosome == 1, name], ]
+qty_col <- c("cat", "mass")
+qty_out <- qty_out[, .SD, .SDcols = qty_col]
+qty_out
