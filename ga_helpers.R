@@ -1,13 +1,13 @@
 # Define evaluation function
 eval_func <- function(x) {
-  current_solution_survivalpoints <- x %*% dataset$pnts
-  current_solution_weight         <- x %*% dataset$wt
+  cur_pnts <- x %*% dataset$pnts
+  cur_wt   <- x %*% dataset$wt
+  cur_sz   <- x %*% dataset$sz
+  cur_pt   <- x %*% dataset$pt
   
-  if (current_solution_weight > wt_lim){
-    return(0)
-  } else {
-    return(-current_solution_survivalpoints)
-  }
+  cond     <- any(cur_wt > wt_lim, cur_sz > sz_lim, cur_pt > pt_lim)
+  
+  if (cond){return(0)} else {return(-cur_pnts)}
 }
 
 # Define monitor function to extract best solution

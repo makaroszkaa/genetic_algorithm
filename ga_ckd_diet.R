@@ -5,20 +5,26 @@ source("ga_helpers.R")
 # Read menu data
 menu <- readRDS('menu_file.rds')
 
+# Dynamic inputs
+body_mass <- 90 ## body weight
+cur_stage <- 4  ## current ckd stage
+ckd_stage <- yaml::read_yaml("ckd_stage.yaml")
+ckd_stage <- rbindlist(ckd_stage)
+ckd_stage <- ckd_stage[stage == cur_stage, ]
+
 # Define limitations
-# TODO: wt_lim depends on CKD stages
-# TODO: stages 1 -- 1.0, 2 -- 0.8, 3 -- 0.7 , 4 -- 0.6, 5 -- 0.6
-# TODO: add phosphorus and potassium restrictions
-wt_lim  <- 0.6 * 90         ## low protein diet is 0.6 - 0.8 grams per 1 kg
-a_energ <- (25  * 90) * 1.1 ## adequate energy for mid-level activity + 10%
+wt_lim  <- body_mass * ckd_stage$pros
+sz_lim  <- ckd_stage$phosp
+pt_lim  <- ckd_stage$potas
+a_energ <- (25  * body_mass) * 1.1 ## adequate energy for mid-level activity
 
 # Subset foods from menu
-sub_menu <- sample_sum(menu, a_energ, 123, T)
+sub_menu <- sample_sum(menu, a_energ, 2, T)
 
 # Make dataset
-col_nms <- c("cat", "cals", "pros")
+col_nms <- c("cat", "cals", "pros", "phosp", "potas")
 dataset <- sub_menu[, .SD, .SDcols = col_nms]
-colnames(dataset) <- c("name", "pnts", "wt")
+colnames(dataset) <- c("name", "pnts", "wt", "sz", "pt")
 
 # Design and run the model
 iter     <- 100
@@ -38,7 +44,12 @@ cat(paste(best_chromosome %*% dataset$pnts, "/", sum(dataset$pnts), "\n"))
 
 cat(paste(paste0(" Total protein: ", sum(dataset[best_chromosome == 1, wt])),
           "\n",
-          paste0("Total energy: ", sum(dataset[best_chromosome == 1, pnts]))))
+          paste0("Total phosphorus: ", sum(dataset[best_chromosome == 1, sz])),
+          "\n",
+          paste0("Total potassium: ", sum(dataset[best_chromosome == 1, pt])),
+          "\n",
+          paste0("Total energy: ", sum(dataset[best_chromosome == 1, pnts])),
+          "\n"))
 
 # Extract quantities for daily menu
 menu[cat %in% dataset[best_chromosome == 1, name], ]
