@@ -1,3 +1,4 @@
+args <- commandArgs(trailingOnly = T)
 pkgs <- c("genalg", "ggplot2", "data.table")
 dpnd <- lapply(pkgs, library, character.only = T)
 source("ga_helpers.R")
@@ -19,7 +20,7 @@ pt_lim  <- ckd_stage$potas
 a_energ <- (25  * body_mass) * 1.1 ## adequate energy for mid-level activity
 
 # Subset foods from menu
-sub_menu <- sample_sum(menu, a_energ, 12, T)
+sub_menu <- sample_sum(menu, a_energ, args, T)
 
 # Make dataset
 col_nms <- c("cat", "cals", "pros", "phosp", "potas")
@@ -55,4 +56,4 @@ cat(paste(paste0(" Total protein: ", sum(dataset[best_chromosome == 1, wt])),
 qty_out <- menu[cat %in% dataset[best_chromosome == 1, name], ]
 qty_col <- c("cat", "mass")
 qty_out <- qty_out[, .SD, .SDcols = qty_col]
-qty_out
+print(qty_out)
