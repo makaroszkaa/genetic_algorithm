@@ -1,0 +1,1 @@
+﻿Invoke-Expression "& `"C:\Program Files\R\R-4.0.3\bin\Rscript.exe`" `"C:\Users\<path_to_your_file_location>\ga_ckd_diet.R`" <integer_seed>"

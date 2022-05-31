@@ -1,6 +1,6 @@
 args <- commandArgs(trailingOnly = T)
-pkgs <- c("genalg", "ggplot2", "data.table")
-dpnd <- lapply(pkgs, library, character.only = T)
+suppressWarnings(suppressMessages(library("genalg")))
+suppressWarnings(suppressMessages(library("data.table")))
 source("ga_helpers.R")
 
 # Read static dictionaries
@@ -20,7 +20,7 @@ pt_lim  <- ckd_stage$potas
 a_energ <- (25  * body_mass) * 1.1 ## adequate energy for mid-level activity
 
 # Subset foods from menu
-sub_menu <- sample_sum(menu, a_energ, args, T)
+sub_menu <- sample_sum(menu, a_energ, as.numeric(args), F)
 
 # Make dataset
 col_nms <- c("cat", "cals", "pros", "phosp", "potas")
@@ -40,20 +40,23 @@ ga_model <- rbga.bin(size           = nrow(dataset),
 best_chromosome <- extract_best(ga_model)
 
 # Evaluate best solution
-dataset[best_chromosome == 1, ]
-cat(paste(best_chromosome %*% dataset$pnts, "/", sum(dataset$pnts), "\n"))
+df_best <- dataset[best_chromosome == 1, ]
 
-cat(paste(paste0(" Total protein: ", sum(dataset[best_chromosome == 1, wt])),
-          "\n",
-          paste0("Total phosphorus: ", sum(dataset[best_chromosome == 1, sz])),
-          "\n",
-          paste0("Total potassium: ", sum(dataset[best_chromosome == 1, pt])),
-          "\n",
-          paste0("Total energy: ", sum(dataset[best_chromosome == 1, pnts])),
-          "\n"))
+# Prepare output
+res_enrg <- paste(best_chromosome %*% dataset$pnts, "/", sum(dataset$pnts))
+res_out  <- 
+  paste(paste0("protein: ", sum(dataset[best_chromosome == 1, wt])),
+        paste0("phosphorus: ", sum(dataset[best_chromosome == 1, sz])),
+        paste0("potassium: ", sum(dataset[best_chromosome == 1, pt])),
+        paste0("energy: ", sum(dataset[best_chromosome == 1, pnts])))
 
 # Extract quantities for daily menu
 qty_out <- menu[cat %in% dataset[best_chromosome == 1, name], ]
 qty_col <- c("cat", "mass")
 qty_out <- qty_out[, .SD, .SDcols = qty_col]
-print(qty_out)
+
+# Make list for printing
+out_l <- list("Energy result"        = res_enrg,
+              "Summary"              = res_out,
+              "Menu"                 = qty_out)
+print(out_l)
